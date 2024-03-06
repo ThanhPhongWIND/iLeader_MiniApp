@@ -19,7 +19,7 @@ const TimeTable = (props) => {
   const [timeTables, settimeTables] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedTime, setSelectedTime] = useState(null);
-
+  const [isChecked, setIsChecked] = useState({});
   useEffect(() => {
     configAppView({
       headerColor: "#8861bb",
@@ -165,6 +165,39 @@ const TimeTable = (props) => {
     return [...additionalInfo, ...jsContent];
   };
 
+   //Notice
+   useEffect(() => {
+    const loadCheckedState = () => {
+      const storedCheckedState = localStorage.getItem("isChecked");
+      if (storedCheckedState) {
+        setIsChecked(JSON.parse(storedCheckedState));
+      }
+    };
+  
+    loadCheckedState();
+  }, []);
+
+  const saveCheckedState = (newState, callback) => {
+    localStorage.setItem("isChecked", JSON.stringify(newState));
+    setIsChecked(newState);
+    if (callback) {
+      callback();
+    }
+  };
+  const handleItemClick = (timeTable) => {
+    const newIsChecked = { ...isChecked };
+    const currentState = isChecked[timeTable.guid];
+    if (currentState === undefined) {
+      newIsChecked[timeTable.guid] = true;
+    } else {
+      newIsChecked[timeTable.guid] = currentState;
+    }
+    saveCheckedState(newIsChecked, () => {
+      setModalVisible(true);
+      setSelectedTime(timeTable);
+    });
+  };
+
   return (
     <Page className="section-container">
       <List>
@@ -174,10 +207,8 @@ const TimeTable = (props) => {
             title={timeTable.title}
             prefix={<Icon icon="zi-calendar" />}
             suffix={<Icon icon="zi-chevron-right" />}
-            onClick={() => {
-              setModalVisible(true);
-              setSelectedTime(timeTable);
-            }}
+            onClick={() => handleItemClick(timeTable)}
+            className={isChecked[timeTable.guid] ? "checked" : ""}
           />
         ))}
       </List>

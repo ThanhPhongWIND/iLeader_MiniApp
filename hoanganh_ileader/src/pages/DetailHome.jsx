@@ -7,6 +7,7 @@ import {
   getUserInfo,
   interactOA,
   openChat,
+  followOA,
 } from "zmp-sdk/apis";
 import {
   BottomNavigation,
@@ -35,6 +36,38 @@ const DetailHome = (props) => {
 
   const [userInfo, setUserInfo] = useState(null);
 
+  // Call API followOA
+  // useEffect(() => {
+  //   const follow = async () => {
+  //     try {
+  //       await followOA({
+  //         id: "3999529157940989049", // Sử dụng studentGuid từ location.state
+  //       });
+  //     } catch (error) {
+  //       console.error("Lỗi khi gọi API followOA:", error);
+  //     }
+  //   };
+
+  //   // Gọi hàm follow khi component được mount
+  //   follow();
+  // }, []); // Dựa vào studentGuid để gọi API followOA
+
+  // Call API getUserInfo
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const { userInfo } = await getUserInfo({});
+        setUserInfo(userInfo);
+        console.log(userInfo);
+      } catch (error) {
+        console.error("Lỗi khi gọi API getUserInfo:", error);
+      }
+    };
+
+    // Gọi hàm fetchUserInfo khi component được mount
+    fetchUserInfo();
+  }, []);
+
   // Call API configAppView
   useEffect(() => {
     const fetchData = async () => {
@@ -60,7 +93,7 @@ const DetailHome = (props) => {
 
   const handleNotificationClick = () => {
     interactOA({
-      oaId: "3999529157940989049",
+      oaId: "3987067628073786435",
       success: (res) => {
         console.log("Interact OA success:", res);
       },
@@ -165,7 +198,7 @@ const DetailHome = (props) => {
       </Box>
       <Box mt={6}>
         <Text.Title className="text-title">
-          Hệ thống Trung Tâm Hoàng Anh Digicontact
+          Trung Tâm Ngoại ngữ Hoàng Anh
         </Text.Title>
         <Text.Title className="text-detail">
           Trung tâm Ngoại ngữ Hoàng Anh là một địa chỉ giáo dục uy tín tại Quảng
@@ -202,17 +235,7 @@ const DetailHome = (props) => {
             handleListBillonClick(studentGuid);
           }}
         />
-        <BottomNavigation.Item
-          label="Thông báo"
-          key="contact"
-          icon={<Icon className="icon-with-badge" icon="zi-clock-1" />}
-          activeIcon={
-            <Icon className="icon-with-badge" icon="zi-clock-1-solid" />
-          }
-          onClick={() => {
-            handleListBillonClick(studentGuid);
-          }}
-        />
+
         <BottomNavigation.Item
           key="timeline"
           label="Kế toán"
@@ -235,7 +258,7 @@ const DetailHome = (props) => {
       <Sheet.Actions
         mask
         visible={actionSheetVisible}
-        title="Xem thông tin học vụ"
+        title="Phụ huynh có thể vào đây xem thông tin học sinh"
         onClose={() => setActionSheetVisible(false)}
         swipeToClose
         actions={[
@@ -269,7 +292,7 @@ const DetailHome = (props) => {
       <Sheet.Actions
         mask
         visible={actionSheetAcount}
-        title="Xem thông tin kế toán"
+        title="Vào đây xem thông tin thiếu đăng ký và học phí"
         onClose={() => setActionSheetAcount(false)}
         swipeToClose
         actions={[

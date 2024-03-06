@@ -45,23 +45,23 @@ const Home = (props) => {
   }, []);
 
   useEffect(() => {
-    const phoneNumber = location?.state?.phoneNumber;
-    console.log("Phone number từ login:", phoneNumber);
+    // const phoneNumber = location?.state?.phoneNumber;
+    // console.log("Phone number từ login:", phoneNumber);
 
-    if (phoneNumber) {
-      // Gọi hàm để lấy danh sách học viên dựa trên số điện thoại
-      getStudentsByPhoneNumber(phoneNumber);
-    } else {
-      console.error("Không tìm thấy số điện thoại");
-    }
-    // getStudentsByPhoneNumber(84368191416);
+    // if (phoneNumber) {
+    //   // Gọi hàm để lấy danh sách học viên dựa trên số điện thoại
+    //   getStudentsByPhoneNumber(phoneNumber);
+    // } else {
+    //   console.error("Không tìm thấy số điện thoại");
+    // }
+    getStudentsByPhoneNumber(84368191416);
   }, [location]);
 
   const getStudentsByPhoneNumber = async (phoneNumber) => {
     try {
       // Gọi API để lấy danh sách học viên dựa trên số điện thoại
       const response = await axios.get(
-        `https://ileader.cloud/api/MiniApp/GetListStudents?phone=${phoneNumber}`,
+        `https://hoanganh2.ileader.vn/api/MiniApp/GetListStudents?phone=${phoneNumber}`,
         { responseType: "json" }
       );
 
@@ -91,33 +91,42 @@ const Home = (props) => {
           CHỌN HỌC VIÊN
         </Text.Title>
       )}
-  
+
       {/* Hiển thị thông báo tải dữ liệu */}
       {isLoading && <Text>Loading...</Text>}
-  
+
       {/* Hiển thị thông báo khi không có học viên */}
       {!isLoading && students.length === 0 && (
         <Text>Số điện thoại này không có đăng ký học viên tại trung tâm.</Text>
       )}
-  
+
       {/* Hiển thị danh sách học viên nếu có */}
       {!isLoading && students.length > 0 && (
         <List>
           {students.map((student) => (
             <List.Item
               key={student.studentGuid}
-              prefix={<Avatar>{student.Avatar}</Avatar>}
-              title={student.student_FullName}
-              subTitle={student.student_DateOfBirth}
-              suffix={<Icon icon="zi-user" />}
+              prefix={
+                <img
+                  className="img-login"
+                  src={"https://hoanganh2.ileader.vn" + student.avatar}
+                  alt="slide-2"
+                />
+              }
+              title={<p className="title-login">{student.student_FullName}</p>}
+              subTitle={
+                <p className="date-user">{student.student_DateOfBirth}</p>
+              }
+              suffix={<Icon className="icon-userlogin" icon="zi-user" />}
               onClick={() => handleItemClick(student)}
+              className="item-user"
             />
           ))}
         </List>
+        
       )}
+      <div class="zalo-chat-widget" data-oaid="3999529157940989049" data-welcome-message="Rất vui khi được hỗ trợ bạn!" data-autopopup="10" data-width="" data-height=""></div>
     </Page>
   );
-  
 };
-
 export default Home;

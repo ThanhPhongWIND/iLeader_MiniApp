@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-
 import { Page, Text, Box, Modal, useNavigate, Icon, List } from "zmp-ui";
 import { configAppView } from "zmp-sdk/apis";
 import axios from "axios";
 import "../css/listbill.css";
+import "../css/detailHome.css";
+
 const { Item } = List;
 
 const Notice = ({ tasks, props }) => {
@@ -16,6 +17,8 @@ const Notice = ({ tasks, props }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [bills, setBills] = useState([]);
   const [selectedNotice, setSelectedNotice] = useState(null);
+  const [isChecked, setIsChecked] = useState({});
+
 
   useEffect(() => {
     // Gọi API configAppView để cấu hình giao diện ứng dụng
@@ -44,11 +47,15 @@ const Notice = ({ tasks, props }) => {
     const fetchBills = async () => {
       try {
         const response = await axios.get(
-          `https://ileader.cloud/api/MiniApp/GetListNotifys?msgType=SK&guidStudent=${studentGuid}`
+          `https://cap2.ileader.vn/api/MiniApp/GetListNotifys?msgType=SK&guidStudent=${studentGuid}`
         );
 
-        // Cập nhật trạng thái với danh sách hóa đơn từ API
+        // Lấy trạng thái đã lưu từ localStorage, nếu không có thì sử dụng giá trị mặc định là false
+        const savedState = JSON.parse(localStorage.getItem("isChecked")) || {};
+
+        // Cập nhật trạng thái với danh sách hóa đơn từ API và trạng thái đã lưu
         setBills(response.data.data.reverse());
+        setIsChecked(savedState);
       } catch (error) {
         console.error("Lỗi khi lấy danh sách hóa đơn:", error);
       }
@@ -56,6 +63,40 @@ const Notice = ({ tasks, props }) => {
     // Gọi hàm để lấy danh sách hóa đơn
     fetchBills();
   }, [studentGuid]);
+
+ //Notice
+ useEffect(() => {
+  const loadCheckedState = () => {
+    const storedCheckedState = localStorage.getItem("isChecked");
+    if (storedCheckedState) {
+      setIsChecked(JSON.parse(storedCheckedState));
+    }
+  };
+
+  loadCheckedState();
+}, []);
+
+const saveCheckedState = (newState, callback) => {
+  localStorage.setItem("isChecked", JSON.stringify(newState));
+  setIsChecked(newState);
+  if (callback) {
+    callback();
+  }
+};
+const handleItemClick = (bill) => {
+  const newIsChecked = { ...isChecked };
+  const currentState = isChecked[bill.guid];
+  if (currentState === undefined) {
+    newIsChecked[bill.guid] = true;
+  } else {
+    newIsChecked[bill.guid] = currentState;
+  }
+  saveCheckedState(newIsChecked, () => {
+    setModalVisible(true);
+    setSelectedNotice(bill);
+  });
+};
+
   return (
     <Page className="section-container">
       <List>
@@ -65,10 +106,8 @@ const Notice = ({ tasks, props }) => {
             title={bill.title}
             prefix={<Icon icon="zi-calendar" />}
             suffix={<Icon icon="zi-chevron-right" />}
-            onClick={() => {
-              setModalVisible(true);
-              setSelectedNotice(bill);
-            }}
+            onClick={() => handleItemClick(bill)}
+            className={isChecked[bill.guid] ? "checked" : ""}
           />
         ))}
       </List>
@@ -93,7 +132,7 @@ const Notice = ({ tasks, props }) => {
         description=""
       >
         <Box className="space-y-4">
-        {selectedNotice?.jsonContent
+          {selectedNotice?.jsonContent
             .replace(/\\n/g, "\n")
             .replace(/^"(.*)"$/, "$1") || ""}
         </Box>

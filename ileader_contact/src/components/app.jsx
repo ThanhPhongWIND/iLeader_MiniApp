@@ -17,37 +17,57 @@ import DetailBranch from "../pages/DetailBranch.jsx";
 import Account from "../pages/Account.jsx";
 import Reg from "../pages/Reg.jsx";
 
-
-
-
 const MyApp = () => {
   const [tasks, setTasks] = useState([]);
- 
+
   return (
     <RecoilRoot>
       <App>
         <SnackbarProvider>
           <ZMPRouter>
             <AnimationRoutes>
-              <Route path="/" element={<Login></Login>}></Route>
-              {/* <Route path="/" element={<Home></Home>}></Route> */}
+              {/* <Route path="/" element={<Login></Login>}></Route> */}
+              <Route path="/" element={<Home></Home>}></Route>
 
-              <Route path="/home" element={<Home />} />
-            
+              {/* <Route path="/home" element={<Home />} /> */}
+
               <Route
                 path="/notice"
                 element={<Notice setTasks={setTasks} tasks={tasks} />}
               />
               <Route path="/listwork" element={<ListWork tasks={tasks} />} />
-              <Route path="/dayscorses" element={<DayScorses setTasks={setTasks} tasks={tasks} />} />
-              <Route path="/detailhome" element={<DetailHome setTasks={setTasks} tasks={tasks} />} />
-              <Route path="/register" element={<Register setTasks={setTasks} tasks={tasks} />} />
-              <Route path="/timetable" element={<TimeTable setTasks={setTasks} tasks={tasks} />} />
-              <Route path="/transcript" element={<TranScript setTasks={setTasks} tasks={tasks} />} />
-              <Route path="/detailbranch" element={<DetailBranch setTasks={setTasks} tasks={tasks} />} />
-              <Route path="/account" element={<Account setTasks={setTasks} tasks={tasks} />} />
-              <Route path="/reg" element={<Reg setTasks={setTasks} tasks={tasks} />} />
-
+              <Route
+                path="/dayscorses"
+                element={<DayScorses setTasks={setTasks} tasks={tasks} />}
+              />
+              <Route
+                path="/detailhome"
+                element={<DetailHome setTasks={setTasks} tasks={tasks} />}
+              />
+              <Route
+                path="/register"
+                element={<Register setTasks={setTasks} tasks={tasks} />}
+              />
+              <Route
+                path="/timetable"
+                element={<TimeTable setTasks={setTasks} tasks={tasks} />}
+              />
+              <Route
+                path="/transcript"
+                element={<TranScript setTasks={setTasks} tasks={tasks} />}
+              />
+              <Route
+                path="/detailbranch"
+                element={<DetailBranch setTasks={setTasks} tasks={tasks} />}
+              />
+              <Route
+                path="/account"
+                element={<Account setTasks={setTasks} tasks={tasks} />}
+              />
+              <Route
+                path="/reg"
+                element={<Reg setTasks={setTasks} tasks={tasks} />}
+              />
             </AnimationRoutes>
           </ZMPRouter>
         </SnackbarProvider>
@@ -55,4 +75,5 @@ const MyApp = () => {
     </RecoilRoot>
   );
 };
+<script src="https://sp.zalo.me/plugins/sdk.js"></script>
 export default MyApp;

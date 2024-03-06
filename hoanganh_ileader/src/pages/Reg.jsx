@@ -38,6 +38,8 @@ const Notification = ({ tasks, props }) => {
   const [regs, setRegs] = useState([]);
 
   const [modalVisible, setModalVisible] = useState(false);
+  const [isChecked, setIsChecked] = useState({});
+
   useEffect(() => {
     // Gọi API configAppView để cấu hình giao diện ứng dụng
     configAppView({
@@ -65,7 +67,7 @@ const Notification = ({ tasks, props }) => {
     const fetchReg = async () => {
       try {
         const response = await axios.get(
-          `https://ileader.cloud/api/MiniApp/GetListNotifys?msgType=ĐK&guidStudent=${studentGuid}`
+          `https://hoanganh2.ileader.vn/api/MiniApp/GetListNotifys?msgType=ĐK&guidStudent=${studentGuid}`
         );
 
         // Cập nhật trạng thái với danh sách hóa đơn từ API
@@ -141,6 +143,39 @@ const Notification = ({ tasks, props }) => {
     ));
   };
 
+   //Notice
+   useEffect(() => {
+    const loadCheckedState = () => {
+      const storedCheckedState = localStorage.getItem("isChecked");
+      if (storedCheckedState) {
+        setIsChecked(JSON.parse(storedCheckedState));
+      }
+    };
+  
+    loadCheckedState();
+  }, []);
+
+  const saveCheckedState = (newState, callback) => {
+    localStorage.setItem("isChecked", JSON.stringify(newState));
+    setIsChecked(newState);
+    if (callback) {
+      callback();
+    }
+  };
+  const handleItemClick = (reg) => {
+    const newIsChecked = { ...isChecked };
+    const currentState = isChecked[reg.guid];
+    if (currentState === undefined) {
+      newIsChecked[reg.guid] = true;
+    } else {
+      newIsChecked[reg.guid] = currentState;
+    }
+    saveCheckedState(newIsChecked, () => {
+      setModalVisible(true);
+      setSelectedReg(reg);
+    });
+  };
+
   return (
     <Page className="section-container">
       <List>
@@ -150,10 +185,8 @@ const Notification = ({ tasks, props }) => {
             title={reg.title}
             prefix={<Icon icon="zi-calendar" />}
             suffix={<Icon icon="zi-chevron-right" />}
-            onClick={() => {
-              setModalVisible(true);
-              setSelectedReg(reg);
-            }}
+            onClick={() => handleItemClick(reg)}
+            className={isChecked[reg.guid] ? "checked" : ""}
           />
         ))}
       </List>

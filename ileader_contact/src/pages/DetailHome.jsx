@@ -2,7 +2,13 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
-import { setNavigationBarTitle, getUserInfo, interactOA, openChat } from "zmp-sdk/apis";
+import {
+  setNavigationBarTitle,
+  getUserInfo,
+  interactOA,
+  openChat,
+  followOA,
+} from "zmp-sdk/apis";
 import {
   BottomNavigation,
   Box,
@@ -30,6 +36,38 @@ const DetailHome = (props) => {
 
   const [userInfo, setUserInfo] = useState(null);
 
+  // Call API followOA
+  useEffect(() => {
+    const follow = async () => {
+      try {
+        await followOA({
+          id: "3999529157940989049", // Sử dụng studentGuid từ location.state
+        });
+      } catch (error) {
+        console.error("Lỗi khi gọi API followOA:", error);
+      }
+    };
+
+    // Gọi hàm follow khi component được mount
+    follow();
+  }, []); // Dựa vào studentGuid để gọi API followOA
+
+  // Call API getUserInfo
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const { userInfo } = await getUserInfo({});
+        setUserInfo(userInfo);
+        console.log(userInfo);
+      } catch (error) {
+        console.error("Lỗi khi gọi API getUserInfo:", error);
+      }
+    };
+
+    // Gọi hàm fetchUserInfo khi component được mount
+    fetchUserInfo();
+  }, []);
+
   // Call API configAppView
   useEffect(() => {
     const fetchData = async () => {
@@ -47,10 +85,10 @@ const DetailHome = (props) => {
         console.error("Lỗi khi lấy thông tin người dùng:", error);
       }
     };
-  
+
     fetchData();
   }, [studentName]);
-  
+
   console.log("StudenGuiId:", studentGuid);
 
   const handleNotificationClick = () => {
@@ -63,15 +101,13 @@ const DetailHome = (props) => {
         console.error("Interact OA error:", err);
       },
     });
-    navigate("/Notification" , { state: { studentGuid } });
+    navigate("/Notification", { state: { studentGuid } });
   };
 
   const handleListBillonClick = () => {
-
     console.log("Navigating to ListBill with studentGuid:", studentGuid);
     navigate("/Notice", { state: { studentGuid } });
   };
-  
 
   const openChatScreen = async () => {
     try {
@@ -81,11 +117,15 @@ const DetailHome = (props) => {
         message: "Xin Chào",
         success: async () => {
           try {
-            const res = await axiosClient.post("https://miniapp.ileader.vn/api/Test", {
-              message: "Xin chào từ Zalo",
-            }, {
-              timeout: 5000 , 
-            });
+            const res = await axiosClient.post(
+              "https://miniapp.ileader.vn/api/Test",
+              {
+                message: "Xin chào từ Zalo",
+              },
+              {
+                timeout: 5000,
+              }
+            );
             console.log(res);
           } catch (error) {
             console.error("Error sending message to server:", error);
@@ -99,8 +139,6 @@ const DetailHome = (props) => {
       console.error("Error opening chat:", error);
     }
   };
-  
-  
 
   const handleRegisteronClick = () => {
     navigate("/register");
@@ -133,7 +171,6 @@ const DetailHome = (props) => {
               alt="slide-2"
             />
           </Swiper.Slide>
-         
         </Swiper>
       </Box>
 
@@ -201,8 +238,8 @@ const DetailHome = (props) => {
           activeIcon={<Icon icon="zi-calendar-solid" />}
           onClick={() => {
             setActionSheetAcount(true);
-          }}        
-          />
+          }}
+        />
         <BottomNavigation.Item
           key="me"
           label="Học vụ"
@@ -224,13 +261,15 @@ const DetailHome = (props) => {
             {
               text: "Thời khóa biểu",
               onClick: () => {
-                navigate("/TimeTable",  { state: { studentGuid } });
+                navigate("/TimeTable", { state: { studentGuid } });
               },
             },
             {
               text: "Bảng điểm",
               onClick: () => {
-                navigate("/transcript", { state: { studentName,studentGuid } });
+                navigate("/transcript", {
+                  state: { studentName, studentGuid },
+                });
               },
             },
             {
@@ -253,11 +292,10 @@ const DetailHome = (props) => {
         swipeToClose
         actions={[
           [
-            
             {
               text: "Phiếu thu học phí",
               onClick: () => {
-                navigate("/account" , { state: { studentGuid } });
+                navigate("/account", { state: { studentGuid } });
               },
             },
             {

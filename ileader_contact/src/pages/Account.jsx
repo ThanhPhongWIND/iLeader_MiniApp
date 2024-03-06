@@ -7,6 +7,8 @@ const { Item } = List;
 import * as dateFns from "date-fns";
 const { format } = dateFns;
 import "../css/listbill.css";
+import "../css/detailHome.css";
+
 
 const pairStyle = {
   display: "flex",
@@ -25,6 +27,7 @@ const Notification = ({ tasks, props }) => {
 
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedAccount, setSelectedAccount] = useState(null);
+  const [isChecked, setIsChecked] = useState({});
 
   useEffect(() => {
     // Gọi API configAppView để cấu hình giao diện ứng dụng
@@ -126,6 +129,40 @@ const Notification = ({ tasks, props }) => {
     ));
   };
 
+ //Notice
+ useEffect(() => {
+  const loadCheckedState = () => {
+    const storedCheckedState = localStorage.getItem("isChecked");
+    if (storedCheckedState) {
+      setIsChecked(JSON.parse(storedCheckedState));
+    }
+  };
+
+  loadCheckedState();
+}, []);
+
+const saveCheckedState = (newState, callback) => {
+  localStorage.setItem("isChecked", JSON.stringify(newState));
+  setIsChecked(newState);
+  if (callback) {
+    callback();
+  }
+};
+const handleItemClick = (account) => {
+  const newIsChecked = { ...isChecked };
+  const currentState = isChecked[account.guid];
+  if (currentState === undefined) {
+    newIsChecked[account.guid] = true;
+  } else {
+    newIsChecked[account.guid] = currentState;
+  }
+  saveCheckedState(newIsChecked, () => {
+    setModalVisible(true);
+    setSelectedAccount(account);
+  });
+};
+
+
   return (
     <Page className="section-container">
       <List>
@@ -135,10 +172,8 @@ const Notification = ({ tasks, props }) => {
             title={account.title}
             prefix={<Icon icon="zi-calendar" />}
             suffix={<Icon icon="zi-chevron-right" />}
-            onClick={() => {
-              setModalVisible(true);
-              setSelectedAccount(account);
-            }}
+            onClick={() => handleItemClick(account)}
+            className={isChecked[account.guid] ? "checked" : ""}
           />
         ))}
       </List>

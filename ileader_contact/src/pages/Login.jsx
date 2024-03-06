@@ -86,7 +86,7 @@ const Login = () => {
           </Box>
           <Box>
             <img
-              className="slide-img img-login"
+              className="slide-img img-lg"
               src="/images/ileader_1.jpg"
               alt="slide-1"
             />

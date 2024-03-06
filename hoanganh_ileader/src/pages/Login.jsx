@@ -20,7 +20,7 @@ import "../css/detailHome.css";
 const Login = () => {
   const navigate = useNavigate();
   const endpoint = "https://graph.zalo.me/v2.0/me/info";
-  const secretKey = "9t44eG2S5Z2QKmk8T1EP";
+  const secretKey = "CXUM2GUupT6vZKPmLsQc";
   const [isLoggedIn, setIsLoggedIn] = useState(false); // State để xác định trạng thái đăng nhập
 
   useEffect(() => {
@@ -81,12 +81,12 @@ const Login = () => {
           </Box>
           <Box mt={6}>
             <Text className="italic-sub-title title-login" size="xSmall">
-              <b>HoangAnh Digicontact cần thông tin của bạn</b>
+              <b>Hoàng Anh Digicontact cần thông tin của bạn</b>
             </Text>
           </Box>
           <Box>
             <img
-              className="slide-img img-login"
+              className="slide-img img-lg"
               src="/images/ileader_1.jpg"
               alt="slide-1"
             />

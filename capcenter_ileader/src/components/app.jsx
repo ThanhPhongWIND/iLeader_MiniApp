@@ -29,10 +29,10 @@ const MyApp = () => {
         <SnackbarProvider>
           <ZMPRouter>
             <AnimationRoutes>
-              <Route path="/" element={<Login></Login>}></Route>
-              {/* <Route path="/" element={<Home></Home>}></Route> */}
+              {/* <Route path="/" element={<Login></Login>}></Route> */}
+              <Route path="/" element={<Home></Home>}></Route>
 
-              <Route path="/home" element={<Home />} />
+              {/* <Route path="/home" element={<Home />} /> */}
             
               <Route
                 path="/notice"

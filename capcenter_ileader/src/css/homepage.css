@@ -13,8 +13,9 @@ body {
   padding: 20px;
 }
 .zaui-list{
-  background-color: #8861bb;
-  color: #fff;
+  /* background-color: #8861bb; */
+  color: black;
+  font-weight: bold;
   border-radius: 5px;
   box-shadow: 0 10px 10px rgba(86, 75, 75, 0.1);
 
@@ -24,7 +25,9 @@ body {
   margin-bottom: 0px !important;
 }
 .zaui-list-item:hover{
-  background-color: #30c840;
+  background-color: #ccc;
+  border-radius: 5px ;
+  color: black ;
 
 }
 .zaui-list-item-subtitle{
@@ -33,3 +36,8 @@ body {
 .zaui-routes{
   background-color: #fff;
 }
+.zaui-icon{
+  color: #30c840 !important;
+  font-weight: bold;
+}
+

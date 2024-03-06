@@ -15,6 +15,8 @@ const ListBill = ({ tasks, props }) => {
 
   const [modalVisible, setModalVisible] = useState(false);
   const [bills, setBills] = useState([]);
+  const [isChecked, setIsChecked] = useState({});
+
   useEffect(() => {
     // Gọi API configAppView để cấu hình giao diện ứng dụng
     configAppView({
@@ -42,7 +44,7 @@ const ListBill = ({ tasks, props }) => {
     const fetchBills = async () => {
       try {
         const response = await axios.get(
-          `https://ileader.cloud/api/MiniApp/GetListNotifys?msgType=SK&guidStudent=${studentGuid}`
+          `https://hoanganh2.ileader.vn/api/MiniApp/GetListNotifys?msgType=SK&guidStudent=${studentGuid}`
         );
 
         // Cập nhật trạng thái với danh sách hóa đơn từ API
@@ -54,6 +56,39 @@ const ListBill = ({ tasks, props }) => {
     // Gọi hàm để lấy danh sách hóa đơn
     fetchBills();
   }, [studentGuid]);
+
+  //Notice
+  useEffect(() => {
+    const loadCheckedState = () => {
+      const storedCheckedState = localStorage.getItem("isChecked");
+      if (storedCheckedState) {
+        setIsChecked(JSON.parse(storedCheckedState));
+      }
+    };
+  
+    loadCheckedState();
+  }, []);
+
+  const saveCheckedState = (newState, callback) => {
+    localStorage.setItem("isChecked", JSON.stringify(newState));
+    setIsChecked(newState);
+    if (callback) {
+      callback();
+    }
+  };
+  const handleItemClick = (bill) => {
+    const newIsChecked = { ...isChecked };
+    const currentState = isChecked[bill.guidSender];
+    if (currentState === undefined) {
+      newIsChecked[bill.guidSender] = true;
+    } else {
+      newIsChecked[bill.guidSender] = currentState;
+    }
+    saveCheckedState(newIsChecked, () => {
+      setModalVisible(true);
+      setSelectedTime(bill);
+    });
+  };
   return (
     <Page className="section-container">
       <List>
@@ -63,9 +98,8 @@ const ListBill = ({ tasks, props }) => {
             title={bill.title}
             prefix={<Icon icon="zi-calendar" />}
             suffix={<Icon icon="zi-chevron-right" />}
-            onClick={() => {
-              setModalVisible(true);
-            }}
+            onClick={() => handleItemClick(tranScript)}
+            className={isChecked[bill.guidSender] ? "checked" : ""}
           />
         ))}
       </List>

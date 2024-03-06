@@ -5,6 +5,7 @@ import { configAppView } from "zmp-sdk/apis";
 import axios from "axios";
 import * as dateFns from "date-fns";
 import "../css/transcript.css";
+import "../css/detailHome.css";
 
 const { format } = dateFns;
 const { Item } = List;
@@ -23,6 +24,7 @@ const TranScript = (props) => {
   console.log("Ten hoc sinh phan abng diem:", studentName);
   console.log("StudenGuiId:", studentGuid);
   const [tranScripts, settranScripts] = useState([]);
+  const [isChecked, setIsChecked] = useState({});
 
   useEffect(() => {
     configAppView({
@@ -43,12 +45,12 @@ const TranScript = (props) => {
       },
     });
   }, []);
- 
+
   useEffect(() => {
     const fetchTranScript = async () => {
       try {
         const response = await axios.get(
-          `https://ileader.cloud/api/MiniApp/GetListNotifys?msgType=BĐ&guidStudent=${studentGuid}`
+          `https://cap2.ileader.vn/api/MiniApp/GetListNotifys?msgType=BĐ&guidStudent=${studentGuid}`
         );
 
         // Cập nhật trạng thái với danh sách hóa đơn từ API
@@ -61,25 +63,34 @@ const TranScript = (props) => {
     fetchTranScript();
   }, [studentGuid]);
 
+  useEffect(() => {
+    const loadCheckedState = () => {
+      const storedCheckedState = localStorage.getItem("isChecked");
+      if (storedCheckedState) {
+        setIsChecked(JSON.parse(storedCheckedState));
+      }
+    };
+  
+    loadCheckedState();
+  }, []);
+  
   const formatTranScript = (tranScript) => {
     if (!tranScript || !tranScript.jsonContent) return null; // Kiểm tra tranScript có tồn tại và có thuộc tính jsonContent không
     const parsedJsonContent = JSON.parse(tranScript.jsonContent);
     console.log("Account object:", tranScript);
 
-    // Hàm định dạng ngày thành "dd/MM/yyyy"
     const formatDate = (dateString) => {
       if (!dateString) return "";
       const parsedDate = new Date(dateString);
       return format(parsedDate, "dd/MM/yyyy");
     };
-    // Truy cập và hiển thị thông tin từ mảng "Details"
     const detailItems = parsedJsonContent.Details.map((detail, index) => (
       <div key={index}>
-        <span>{detail.ColumName}:</span> 
-        <span className="fr-studentName">{detail.ColumnContent}</span> 
-
+        <span>{detail.ColumName}:</span>
+        <span className="fr-studentName">{detail.ColumnContent}</span>
       </div>
     ));
+
     return (
       <Fragment>
         {studentName && (
@@ -93,6 +104,30 @@ const TranScript = (props) => {
     );
   };
 
+ 
+  const saveCheckedState = (newState, callback) => {
+    localStorage.setItem("isChecked", JSON.stringify(newState));
+    setIsChecked(newState);
+    if (callback) {
+      callback();
+    }
+  };
+  const handleItemClick = (tranScript) => {
+    const newIsChecked = { ...isChecked };
+    const currentState = isChecked[tranScript.guid];
+    if (currentState === undefined) {
+      newIsChecked[tranScript.guid] = true;
+    } else {
+      newIsChecked[tranScript.guid] = currentState;
+    }
+    saveCheckedState(newIsChecked, () => {
+      setModalVisible(true);
+      setSelectedTranScrpit(tranScript);
+    });
+  };
+  
+
+
   return (
     <Page className="section-container">
       <List>
@@ -102,10 +137,9 @@ const TranScript = (props) => {
             title={tranScript.title}
             prefix={<Icon icon="zi-calendar" />}
             suffix={<Icon icon="zi-chevron-right" />}
-            onClick={() => {
-              setModalVisible(true);
-              setSelectedTranScrpit(tranScript);
-            }}
+            onClick={() => handleItemClick(tranScript)}
+            className={isChecked[tranScript.guid] ? "checked" : ""}
+            
           />
         ))}
       </List>
@@ -113,6 +147,8 @@ const TranScript = (props) => {
         visible={modalVisible}
         title="Bảng điểm học viên"
         onClose={() => {
+          // Reset checked state when Modal is closed
+          saveCheckedState(isChecked);
           setModalVisible(false);
         }}
         zIndex={1200}

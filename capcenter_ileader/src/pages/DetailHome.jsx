@@ -7,6 +7,7 @@ import {
   getUserInfo,
   interactOA,
   openChat,
+  followOA,
 } from "zmp-sdk/apis";
 import {
   BottomNavigation,
@@ -35,6 +36,38 @@ const DetailHome = (props) => {
 
   const [userInfo, setUserInfo] = useState(null);
 
+  // Call API followOA
+  // useEffect(() => {
+  //   const follow = async () => {
+  //     try {
+  //       await followOA({
+  //         id: "3999529157940989049", // Sử dụng studentGuid từ location.state
+  //       });
+  //     } catch (error) {
+  //       console.error("Lỗi khi gọi API followOA:", error);
+  //     }
+  //   };
+
+  //   // Gọi hàm follow khi component được mount
+  //   follow();
+  // }, []); // Dựa vào studentGuid để gọi API followOA
+
+  // Call API getUserInfo
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const { userInfo } = await getUserInfo({});
+        setUserInfo(userInfo);
+        console.log(userInfo);
+      } catch (error) {
+        console.error("Lỗi khi gọi API getUserInfo:", error);
+      }
+    };
+
+    // Gọi hàm fetchUserInfo khi component được mount
+    fetchUserInfo();
+  }, []);
+
   // Call API configAppView
   useEffect(() => {
     const fetchData = async () => {
@@ -60,7 +93,7 @@ const DetailHome = (props) => {
 
   const handleNotificationClick = () => {
     interactOA({
-      oaId: "3999529157940989049",
+      oaId: "2044406113850165178",
       success: (res) => {
         console.log("Interact OA success:", res);
       },
@@ -114,7 +147,7 @@ const DetailHome = (props) => {
   return (
     <Page className="container plc-action">
       <Text.Title size="small" className="text-title">
-        TỔ CHỨC GIÁO DỤC CAP EDUCATION
+        TỔ CHỨC GIÁO DỤC CAPCENTER
       </Text.Title>
       <Box
         mt={6}
@@ -144,7 +177,7 @@ const DetailHome = (props) => {
       <Box mt={6} className="call-admin">
         <a className="link-admin" onClick={openChatScreen}>
           <p className="text-success">
-            Bấm vào đây để kết nối với Tổ Chức Giáo Dục CAP EDUCATION!
+            Bấm vào đây để kết nối với Tổ Chức Giáo Dục CAPCENTER !
           </p>
           <Icon className="icon-admin" icon="zi-user-window-solid" />
         </a>
@@ -165,13 +198,19 @@ const DetailHome = (props) => {
       </Box>
       <Box mt={6}>
         <Text.Title className="text-title">
-          Tổ Chức Giáo Dục CAP EDUCATION
+          TỔ Chức Giáo Dục CAPCENTER
         </Text.Title>
         <Text.Title className="text-detail">
-          CAP Education, Top 5 thương hiệu được yêu thích trong lĩnh vực đào tạo
-          tiếng Pháp, tiếng Đức & tư vấn du học Pháp, Đức và Canada. Tìm hiểu
-          thêm: www.capfrance.edu.vn ┃www.hallo.edu.vn ┃Tel/Zalo: (+84) (0)916
-          070 169
+          Cap Education - Địa Chỉ Học Tiếng Pháp Online & Offline & Tư Vấn Du
+          Học Pháp, Du Học Canada, các chương trình xin định Cư Canada Uy Tín
+          Nhất Việt Nam với đội ngũ luật sư bản địa, cam kết đầu ra. Sở hữu đội
+          ngũ giảng viên 100% Giảng Viên Bản Xứ Pháp/ giảng viên Việt Nam, tốt
+          nghiệp cử nhân, thạc sĩ, tiến sĩ các trường lớn của Pháp & Việt Nam.
+          Có Chứng Chỉ đào tạo sư phạm Quốc Tế, sư phạm Việt Nam, kinh nghiệm
+          Giảng Dạy Tiếng Pháp nhiều năm. Các Khóa Học Nổi Tiếng Như Học Tiếng
+          Pháp Cơ Bản , Học Tiếng Pháp Giao Tiếp, Học Tiếng Pháp Cấp Tốc Giúp
+          Bạn Học Tiếng Pháp phát triển 4 kỹ năng Nghe - Nói - Đọc - Viết, chuẩn
+          khung tham chiếu Ngôn Ngữ Chung Châu Âu (CEFR) . 
         </Text.Title>
       </Box>
 
@@ -220,7 +259,7 @@ const DetailHome = (props) => {
       <Sheet.Actions
         mask
         visible={actionSheetVisible}
-        title="Xem thông tin học vụ"
+        title="Phụ huynh có thể vào đây xem thông tin học sinh"
         onClose={() => setActionSheetVisible(false)}
         swipeToClose
         actions={[
@@ -254,7 +293,7 @@ const DetailHome = (props) => {
       <Sheet.Actions
         mask
         visible={actionSheetAcount}
-        title="Xem thông tin kế toán"
+        title="Vào đây xem thông tin thiếu đăng ký và học phí"
         onClose={() => setActionSheetAcount(false)}
         swipeToClose
         actions={[

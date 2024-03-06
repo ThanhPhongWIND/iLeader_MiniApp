@@ -81,12 +81,12 @@ const Login = () => {
           </Box>
           <Box mt={6}>
             <Text className="italic-sub-title title-login" size="xSmall">
-              <b>CapCenter Digicontact cần thông tin của bạn</b>
+              <b>Hoàng Anh Digicontact cần thông tin của bạn</b>
             </Text>
           </Box>
           <Box>
             <img
-              className="slide-img img-login"
+              className="slide-img img-lg"
               src="/images/ileader_1.jpg"
               alt="slide-1"
             />
