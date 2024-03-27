@@ -82,6 +82,10 @@ const DayScorses = (props) => {
         label: "Nhận xét",
         value: parsedJsonContent.CriteriaName ?? parsedJsonContent.CriteriaName,
       },
+      {
+        label: "Ghi chú",
+        value: parsedJsonContent.Note ?? parsedJsonContent.Note,
+      },
     ];
 
     return (
@@ -121,7 +125,7 @@ const DayScorses = (props) => {
         setIsChecked(JSON.parse(storedCheckedState));
       }
     };
-  
+
     loadCheckedState();
   }, []);
 

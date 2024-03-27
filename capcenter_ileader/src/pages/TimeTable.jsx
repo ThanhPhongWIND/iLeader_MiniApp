@@ -149,6 +149,7 @@ const TimeTable = (props) => {
                         </span>
                       </div>
                     </div>
+                    <br/>
                   </Fragment>
                 );               
               })}

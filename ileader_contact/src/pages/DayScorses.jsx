@@ -121,7 +121,7 @@ const DayScorses = (props) => {
         setIsChecked(JSON.parse(storedCheckedState));
       }
     };
-  
+
     loadCheckedState();
   }, []);
 
@@ -152,14 +152,18 @@ const DayScorses = (props) => {
         {dayScorsess.map((dayScorses) => (
           <Item
             key={dayScorses.guid}
-            title={dayScorses.title}
+            title={
+              dayScorses.title.length > 42
+                ? `${dayScorses.title.substring(0, 42)}...`
+                : dayScorses.title
+            }
             prefix={<Icon icon="zi-calendar" />}
-            suffix={<Icon icon="zi-chevron-right" />}
             onClick={() => handleItemClick(dayScorses)}
             className={isChecked[dayScorses.guid] ? "checked" : ""}
           />
         ))}
       </List>
+
       <Modal
         visible={modalVisible}
         title="Bảng điểm danh"

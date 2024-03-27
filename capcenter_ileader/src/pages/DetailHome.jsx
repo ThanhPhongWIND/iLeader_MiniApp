@@ -198,7 +198,7 @@ const DetailHome = (props) => {
       </Box>
       <Box mt={6}>
         <Text.Title className="text-title">
-          TỔ Chức Giáo Dục CAPCENTER
+          Tổ Chức Giáo Dục CAPCENTER
         </Text.Title>
         <Text.Title className="text-detail">
           Cap Education - Địa Chỉ Học Tiếng Pháp Online & Offline & Tư Vấn Du

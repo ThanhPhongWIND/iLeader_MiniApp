@@ -96,7 +96,8 @@ const TimeTable = (props) => {
     const additionalInfo = infoPairs.map((pair, index) => (
       <div style={pairStyle} key={index} className="addInfo">
         <span>{pair.label}:</span>
-        <span>{pair.value}</span>
+        <span>{pair.value}</span> 
+
       </div>
     ));
     console.log("timeTables:", timeTables);
@@ -149,6 +150,7 @@ const TimeTable = (props) => {
                         </span>
                       </div>
                     </div>
+                    <br/>
                   </Fragment>
                 );               
               })}

@@ -45,16 +45,16 @@ const Home = (props) => {
   }, []);
 
   useEffect(() => {
-    // const phoneNumber = location?.state?.phoneNumber;
-    // console.log("Phone number từ login:", phoneNumber);
+    const phoneNumber = location?.state?.phoneNumber;
+    console.log("Phone number từ login:", phoneNumber);
 
-    // if (phoneNumber) {
-    //   // Gọi hàm để lấy danh sách học viên dựa trên số điện thoại
-    //   getStudentsByPhoneNumber(phoneNumber);
-    // } else {
-    //   console.error("Không tìm thấy số điện thoại");
-    // }
-    getStudentsByPhoneNumber(84368191416);
+    if (phoneNumber) {
+      // Gọi hàm để lấy danh sách học viên dựa trên số điện thoại
+      getStudentsByPhoneNumber(phoneNumber);
+    } else {
+      console.error("Không tìm thấy số điện thoại");
+    }
+    // getStudentsByPhoneNumber(84368191416);
   }, [location]);
 
   const getStudentsByPhoneNumber = async (phoneNumber) => {
@@ -107,11 +107,15 @@ const Home = (props) => {
             <List.Item
               key={student.studentGuid}
               prefix={
-                <img
-                  className="img-login"
-                  src={"https://cap2.ileader.vn/" + student.avatar}
-                  alt="slide-2"
-                />
+                student.avatar ? (
+                  <img
+                    className="img-login"
+                    src={"https://cap2.ileader.vn" + student.avatar}
+                    alt="slide-2"
+                  />
+                ) : (
+                    <Avatar  className="img-login" />
+                )
               }
               title={<p className="title-login">{student.student_FullName}</p>}
               subTitle={

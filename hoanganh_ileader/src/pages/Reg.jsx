@@ -90,9 +90,15 @@ const Notification = ({ tasks, props }) => {
       const parsedDate = new Date(dateString);
       return format(parsedDate, "dd/MM/yyyy");
     };
+    const formatCurrency = (value) => {
+      if (value === undefined || value === null) return "";
+      // Ép kiểu tiền tệ Việt Nam đồng
+      return value.toLocaleString("vi-VN", { style: "currency", currency: "VND" });
+    };
+
     const infoPairs = [
       {
-        label: "Mã phiếu",
+        label: "Mã phiếu", 
         value: parsedJsonContent.Id ?? parsedJsonContent.Id,
       },
       {
@@ -113,16 +119,16 @@ const Notification = ({ tasks, props }) => {
       },
       {
         label: "Tổng hóa đơn",
-        value: parsedJsonContent.Paid ?? parsedJsonContent.Paid,
+        value: formatCurrency(parsedJsonContent.Paid ?? parsedJsonContent.Paid),
       },
 
       {
         label: "Thanh toán",
-        value: parsedJsonContent.TotalBill ?? parsedJsonContent.TotalBill,
+        value: formatCurrency(parsedJsonContent.TotalBill ?? parsedJsonContent.TotalBill),
       },
       {
         label: "Còn nợ",
-        value: parsedJsonContent.TotalBill ?? parsedJsonContent.TotalBill,
+        value: formatCurrency(parsedJsonContent.TotalBill ?? parsedJsonContent.TotalBill),
       },
       {
         label: "Ghi chú",

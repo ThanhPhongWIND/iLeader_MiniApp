@@ -114,7 +114,7 @@ const Home = (props) => {
                     alt="slide-2"
                   />
                 ) : (
-                    <Avatar online />
+                    <Avatar  className="img-login" />
                 )
               }
               title={<p className="title-login">{student.student_FullName}</p>}

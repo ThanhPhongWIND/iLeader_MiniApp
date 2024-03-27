@@ -81,7 +81,7 @@ const Login = () => {
           </Box>
           <Box mt={6}>
             <Text className="italic-sub-title title-login" size="xSmall">
-              <b>Hoàng Anh Digicontact cần thông tin của bạn</b>
+              <b>CapCenter Digicontact cần thông tin của bạn</b>
             </Text>
           </Box>
           <Box>

@@ -79,6 +79,12 @@ const Notification = ({ tasks, props }) => {
       const parsedDate = new Date(dateString);
       return format(parsedDate, "dd/MM/yyyy");
     };
+    // Định dạng tiền tệ
+    const formatCurrency = (value) => {
+      if (value === undefined || value === null) return "";
+      // Ép kiểu tiền tệ Việt Nam đồng
+      return value.toLocaleString("vi-VN", { style: "currency", currency: "VND" });
+    };
 
     const infoPairs = [
       {
@@ -95,20 +101,19 @@ const Notification = ({ tasks, props }) => {
       },
       {
         label: "Thanh toán",
-        value: parsedJsonContent.Abate ?? parsedJsonContent.Abate,
+        value: formatCurrency(parsedJsonContent.Abate ?? parsedJsonContent.Abate),
       },
       {
         label: "Ví tiền",
-        value: parsedJsonContent.Purse ?? parsedJsonContent.Purse,
+        value: formatCurrency(parsedJsonContent.Purse ?? parsedJsonContent.Purse),
       },
       {
         label: "Tổng thu",
-        value: parsedJsonContent.TotalBill ?? parsedJsonContent.TotalBill,
+        value: formatCurrency(parsedJsonContent.TotalBill ?? parsedJsonContent.TotalBill),
       },
       {
         label: "Hình thức thanh toán",
-        value:
-          parsedJsonContent.FormsOfPayment ?? parsedJsonContent.FormsOfPayment,
+        value: parsedJsonContent.FormsOfPayment ?? parsedJsonContent.FormsOfPayment,
       },
       {
         label: "Ghi chú",
@@ -129,39 +134,38 @@ const Notification = ({ tasks, props }) => {
     ));
   };
 
- //Notice
- useEffect(() => {
-  const loadCheckedState = () => {
-    const storedCheckedState = localStorage.getItem("isChecked");
-    if (storedCheckedState) {
-      setIsChecked(JSON.parse(storedCheckedState));
+  //Notice
+  useEffect(() => {
+    const loadCheckedState = () => {
+      const storedCheckedState = localStorage.getItem("isChecked");
+      if (storedCheckedState) {
+        setIsChecked(JSON.parse(storedCheckedState));
+      }
+    };
+
+    loadCheckedState();
+  }, []);
+
+  const saveCheckedState = (newState, callback) => {
+    localStorage.setItem("isChecked", JSON.stringify(newState));
+    setIsChecked(newState);
+    if (callback) {
+      callback();
     }
   };
-
-  loadCheckedState();
-}, []);
-
-const saveCheckedState = (newState, callback) => {
-  localStorage.setItem("isChecked", JSON.stringify(newState));
-  setIsChecked(newState);
-  if (callback) {
-    callback();
-  }
-};
-const handleItemClick = (account) => {
-  const newIsChecked = { ...isChecked };
-  const currentState = isChecked[account.guid];
-  if (currentState === undefined) {
-    newIsChecked[account.guid] = true;
-  } else {
-    newIsChecked[account.guid] = currentState;
-  }
-  saveCheckedState(newIsChecked, () => {
-    setModalVisible(true);
-    setSelectedAccount(account);
-  });
-};
-
+  const handleItemClick = (account) => {
+    const newIsChecked = { ...isChecked };
+    const currentState = isChecked[account.guid];
+    if (currentState === undefined) {
+      newIsChecked[account.guid] = true;
+    } else {
+      newIsChecked[account.guid] = currentState;
+    }
+    saveCheckedState(newIsChecked, () => {
+      setModalVisible(true);
+      setSelectedAccount(account);
+    });
+  };
 
   return (
     <Page className="section-container">

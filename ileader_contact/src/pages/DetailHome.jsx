@@ -35,22 +35,25 @@ const DetailHome = (props) => {
   const [actionSheetAcount, setActionSheetAcount] = useState(false);
 
   const [userInfo, setUserInfo] = useState(null);
-
+  const [isFollowing, setIsFollowing] = useState(false); 
   // Call API followOA
-  useEffect(() => {
-    const follow = async () => {
-      try {
-        await followOA({
-          id: "3999529157940989049", // Sử dụng studentGuid từ location.state
-        });
-      } catch (error) {
-        console.error("Lỗi khi gọi API followOA:", error);
+ // Call API followOA chỉ khi chưa follow
+ useEffect(() => {
+  const checkFollowing = async () => {
+    try {
+      const response = await getUserInfo({});
+      const { following } = response.userInfo;
+      setIsFollowing(following); // Cập nhật state isFollowing
+      if (!following) {
+        await followOA({ id: "3999529157940989049" }); // Gọi followOA nếu chưa follow
       }
-    };
+    } catch (error) {
+      console.error("Lỗi khi gọi API getUserInfo:", error);
+    }
+  };
 
-    // Gọi hàm follow khi component được mount
-    follow();
-  }, []); // Dựa vào studentGuid để gọi API followOA
+  checkFollowing();
+}, []); 
 
   // Call API getUserInfo
   useEffect(() => {
